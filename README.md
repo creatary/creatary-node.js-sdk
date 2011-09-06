@@ -1,8 +1,10 @@
 # node-creatary
 
 A node.js module for accessing Creatary API.
+
 *Receive & send SMS, query location and charge subscribers all through their mobile operator,
 in a revenue share, no upfront investment model.*
+
 https://creatary.com
 
 ## How to Install
