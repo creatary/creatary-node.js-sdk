@@ -42,7 +42,7 @@ app.get('/', function (req, res) {
 });
 
 // Init Creatary module with the application consumer key and secret
-var creatary = require('../../lib/creatary').init('s28onmgfyn37l1pt', '9iriqss6o2syxejv');
+var creatary = require('../../lib/creatary').init('insert_consumer_key_here', 'insert_consumer_secret_here');
 
 // Set up incoming SMS URL and our callback
 app.post('/creatary/sms', creatary.Sms.createListener(onSms));

@@ -28,7 +28,7 @@
 
 
 // Init Creatary module with the application consumer key and secret
-var creatary = require('../../lib/creatary').init('7he89zpq5k2dhj6t', '9387vbtfqr7jv87n');
+var creatary = require('../../lib/creatary').init('insert_consumer_key_here', 'insert_consumer_secret_here');
 
 // Require neccessary modules (express: web server, socket.io: real-time (websocket-like) browser-server communication)
 var express = require('express');
