@@ -14,7 +14,7 @@ amount to the subscriber via his operator.
 
 ## How to Use
 
-### `parking-server.js``
+### File `parking-server.js`
 
 The node.js application logic.
 Install the dependencies with:
@@ -25,7 +25,7 @@ Then run it with the command:
 
     $ node parking-server.js
 		    
-### `index.html`
+### File `index.html`
 
 The client management interface for the parking application.
 It is served by the above script.

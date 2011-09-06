@@ -10,7 +10,7 @@ a simple "Yes" or "No" response from the application.
 
 ## How to Use
 
-### `loves-me.js`
+### File `loves-me.js`
 
 The node.js application logic.   
 Run it with the command:

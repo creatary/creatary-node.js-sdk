@@ -12,6 +12,7 @@ https://creatary.com
 ## How to Use
 
 Init Creatary module with your application consumer key and secret: (that you obtain from https://creatary.com)
+
 ```js
 var creatary = require('creatary').init('consumer_key', 'consumer_secret');
 ```
