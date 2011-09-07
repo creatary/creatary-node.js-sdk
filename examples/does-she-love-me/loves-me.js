@@ -28,22 +28,11 @@
 
 
 // Init Creatary module with the application consumer key and secret
-var creatary = require('../../lib/creatary').init('insert_consumer_key_here', 'insert_consumer_secret_here');
-
-// Require neccessary modules (express: web server, socket.io: real-time (websocket-like) browser-server communication)
-var express = require('express');
-var app = express.createServer();
+var creatary = require('creatary').init('dyyfz5ihyr5i2ohl', 'r6y5ix7gwfjm359q');
 
 // Set up incoming SMS URL and our callback
-app.use(express.bodyParser()); // Necessary to parse request body JSON
-app.post('/creatary/sms', creatary.Sms.createListener(onSms));
-
-// Let our webserver listen on the specified port
-app.listen(10001);
-
-
-// This function gets called when our application receives an SMS
-function onSms(params) {
-    // Let's send our professional response
+creatary.Sms.receive(function(params) {
     creatary.Sms.send(params.access_token, Math.round(Math.random()) ? "Yes!" : "No :(");
-}
+}, {
+    url: "http://localhost:10001"
+});
