@@ -35,4 +35,4 @@ creatary.Sms.receive(function(params) {
     creatary.Sms.send(params.access_token, Math.round(Math.random()) ? "Yes!" : "No :(");
 }, {
     url: "http://localhost:10001"
-}
+});
