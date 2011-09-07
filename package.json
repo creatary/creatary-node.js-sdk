@@ -1,0 +1,20 @@
+{
+    "name": "creatary"
+  , "version": "0.0.1"
+  , "description": "Official node.js implementation of Creatary API"
+  , "homepage": "http://creatary.com"
+  , "keywords": ["sms", "mms", "oauth", "location", "charging"]
+  , "author": "Balazs Nagy <balazs.1.nagy@nsn.com>"
+  , "contributors": []
+  , "repository":{
+        "type": "git"
+      , "url": ""
+    }
+  , "dependencies": {
+        "oauth": "0.9.5"
+    }
+  , "devDependencies": {}
+  , "main": "./lib/creatary"
+  , "engines": { "node": ">= 0.4.10" }
+}
+
