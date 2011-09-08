@@ -11,7 +11,8 @@
       , "url": ""
     }
   , "dependencies": {
-        "oauth": "0.9.5"
+        "oauth": "0.9.5",
+        "express": "2.4.6"
     }
   , "devDependencies": {}
   , "main": "./lib/creatary"

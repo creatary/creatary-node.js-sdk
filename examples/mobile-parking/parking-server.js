@@ -29,23 +29,45 @@
 
 // Require neccessary modules (express: web server, socket.io: real-time (websocket-like) browser-server communication)
 var express = require('express');
-var app = express.createServer();
-var io = require('socket.io').listen(app);
+var srv = express.createServer();
+var io = require('socket.io').listen(srv);
+
+// Creatary configuration object
+var creataryConfig = {
+    server: srv,
+    receiveSms : {
+        url: 'http://localhost/creatary/sms',
+        callBack: onSms
+    },
+    oAuth : {
+        connectUrl : 'http://localhost/connect',
+        url: 'http://localhost/callback',
+        callback: onAuthed
+    }
+};
+// Init Creatary module with the application consumer key and secret
+var creatary = require('../../lib/creatary').init('4wc3w7g9nlavytem', 'dbvo6jw9x8bf1uro', creataryConfig);
+
+// We are acting as a web server: serve html files
+srv.get(/^\/users?(\?sms)/, function(req, res) {
+    // Display user page based on authentication status
+    if (typeof req.session.user === "undefined") {
+        res.sendfile(__dirname + '/index_user.html');
+    } else {
+        if (req.params[0] !== null) {
+            creatary.Sms.send(req.session.user, "Test SMS to verify your account.");
+        }
+        res.sendfile(__dirname + '/index_user_authed.html');
+    }
+});
+
+// Display admin page
+srv.get('/admin', function (req, res) {
+    res.sendfile(__dirname + '/index_admin.html');
+});
 
 // The list of currently parking cars
 var parkingCars = {};
-
-// We are acting as a web server: serve index.html
-app.use(express.bodyParser()); // Necessary to parse request body JSON
-app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
-});
-
-// Init Creatary module with the application consumer key and secret
-var creatary = require('../../lib/creatary').init('insert_consumer_key_here', 'insert_consumer_secret_here');
-
-// Set up incoming SMS URL and our callback
-app.post('/creatary/sms', creatary.Sms.createListener(onSms));
 
 // Handle browser connections
 io.sockets.on('connection', function (socket) {
@@ -53,7 +75,13 @@ io.sockets.on('connection', function (socket) {
 });
 
 // Let our webserver listen on the specified port
-app.listen(10001);
+srv.listen(80);
+
+// After oAuth authorization, store user in session and redirect to root
+function onAuthed(req, res, oath) {
+    req.session.user = oath.access_token;
+    res.redirect("/");
+}
 
 // This function gets called when our application receives an SMS
 function onSms(params) {
