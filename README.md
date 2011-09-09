@@ -13,23 +13,71 @@ https://creatary.com
 
 ## How to Use
 
+### Initialization
+
 Init Creatary module with your application consumer key and secret: (that you obtain from https://creatary.com)
 
 ```js
-var creatary = require('creatary').init('consumer_key', 'consumer_secret');
+var creatary = require('creatary').init(consumer_key, consumer_secret, [optional_parameters]);
 ```
 
+```js
+optional_parameters = {
+    server: srv, // pass your Express instance, Creatary module will reuse it for OAuth and listening for SMS
+    receiveSms : { // parameters for receiving SMS
+        url: 'http://localhost:10001/sms', // SMS callback url
+        callBack: onSms // callback function for incoming SMS
+    },
+    oAuth : {
+        connectUrl : '/connect', // relative URL, used to initiate the OAuth authorization for your app
+        url: 'http://173.203.109.105:10001/callback', // absolute URL, used redirect back the user after authorization
+        callback: onAuthed // callback function after successful oAuth flow
+    }
+}
+```
 And you're ready to use self-describing API calls:
+
+### SMS
 
 ```js
 // Send SMS
-creatary.Sms.send(userToken, "Hello World SMS");
-// Query Location
-creatary.Location.getCoordinates(userToken, function(locData) { /* yay, i have it! */ });
-// Charge User for 1.00 USD
-creatary.Charging.chargeAmount(userToken, "100");
+creatary.Sms.send(toToken, "Hello World SMS");
 // Receive SMS
-creatary.Sms.createListener(userToken, { url: "https://myserver.com/sms" });
+creatary.Sms.receive(function(data), [params]);
+
+data = {
+    to: destination MSISDN
+    body: messages
+    access_token: token which identifies the sender, it can be used for response
+    transaction_id: transaction id of the SMS, use it in order to keep the SMS session
+}
+
+params = {
+    url: "http://localhost:80/sms" // it's used to open the server port and bind the path
+}
+```
+
+### Location
+
+```js
+// Query Location
+creatary.Location.getCoordinates(userToken, function(locData));
+
+locData = {
+    latitude:
+    longitude: 
+    accuracy: 
+    timestamp:
+}
+```
+
+### Charging
+
+```js
+// Charge User for 1.00 USD
+creatary.Charging.chargeAmount(userToken, 100);
+// Charge User with a service code
+creatary.Charging.chargeCode(userToken, "MO");
 ```
 
 ## License
