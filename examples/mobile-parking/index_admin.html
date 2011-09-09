@@ -2,9 +2,7 @@
 <html> 
 	<head> 
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<meta http-equiv="expires" content="Sat, 01 Jan 2000 00:00:00 GMT" />
-		<meta http-equiv="cache-control" content="private, no-cache, no-store, must-revalidate" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Mobile Parking Admin Interface</title>
 		<script style="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
@@ -39,7 +37,7 @@
 					<span style="font-size: medium; font-weight: normal; color: #fff;">Pay-By-Mobile Parking Admin App</span> 
 				</td> 
 				<td style="text-align: right; vertical-align: top; padding: 0em;"> 
-					<img src="creatary-logo.png" />
+                    <img src="data:image/png;base64,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" />
 				</td>
 			</tr> 
 		</table> 

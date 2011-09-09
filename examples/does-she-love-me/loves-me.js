@@ -28,7 +28,7 @@
 
 
 // Init Creatary module with the application consumer key and secret
-var creatary = require('creatary').init('dyyfz5ihyr5i2ohl', 'r6y5ix7gwfjm359q', {
+var creatary = require('creatary').init('consumer_key', 'consumer_secret', {
     receiveSms : {
         callBack: function(params) {
             creatary.Sms.send(params.access_token, Math.round(Math.random()) ? "Yes!" : "No :(");
