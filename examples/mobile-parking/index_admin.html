@@ -7,7 +7,7 @@
 		<script style="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
-		  var socket = io.connect('http://173.203.109.105:10001');
+		  var socket = io.connect('/');
 		  socket.on('parking-cars', function (data) {
 			$('#cars').empty();
 			var added = false;

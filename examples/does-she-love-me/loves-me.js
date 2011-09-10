@@ -1,6 +1,6 @@
 /**
  * Does she love me? advisor application
- * Provided for Creatary JS SDK
+ * Provided for Creatary node.JS SDK
  * 
  * @author Attila Incze <attila.incze@nsn.com>
  *

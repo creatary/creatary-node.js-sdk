@@ -1,6 +1,6 @@
 /**
  * Pay-by-mobile parking application
- * Provided for Creatary JS SDK
+ * Provided for Creatary node.JS SDK
  *
  * @author Attila Incze <attila.incze@nsn.com>
  * 
@@ -68,9 +68,6 @@ srv.get('/admin', function (req, res) {
     res.sendfile(__dirname + '/index_admin.html');
 });
 
-// Serve our logo
-srv.get("/creatary-logo.png", function(req, res) { res.sendfile(__dirname + '/creatary-logo.png'); });
-
 // The list of currently parking cars
 var parkingCars = {};
 
@@ -97,16 +94,18 @@ function onSms(params) {
     // STOP message => finished parking
     if (message.indexOf('STOP') != -1) {
         var record = parkingCars[from];
-        var toTime = new Date();
-        var timeDiff = toTime.getTime() - record.fromTime.getTime(); // In milliseconds
-        // Geolocation based tariff (cheaper on the southern hemisphere :)
-        var pricePerHour = (record.coords.latitude > 0) ? 10 : 5;
-        var cost = Math.round(timeDiff / (1000*60*60) * pricePerHour * 100);
-        creatary.Sms.send(from, "Thanks for using Mobile Parking! Your parked from " +
-            prettyTime(record.fromTime) + " till " + prettyTime(toTime) + ". You have been charged " + cost + " cents.");
-        creatary.Charging.chargeAmount(from, cost); // Charge the user. Are you enjoying this, right ?
-        delete parkingCars[from]; // Delete user(car) from list
-        io.sockets.emit('parking-cars', parkingCars); // Update every browser client
+        if (typeof record !== "undefined") {
+            var toTime = new Date();
+            var timeDiff = toTime.getTime() - record.fromTime.getTime(); // In milliseconds
+            // Geolocation based tariff (cheaper on the southern hemisphere :)
+            var pricePerHour = (record.coords.latitude > 0) ? 10 : 5;
+            var cost = Math.round(timeDiff / (1000*60*60) * pricePerHour * 100);
+            creatary.Sms.send(from, "Thanks for using Mobile Parking! Your parked from " +
+                prettyTime(record.fromTime) + " till " + prettyTime(toTime) + ". You have been charged " + cost + " cents.");
+            creatary.Charging.chargeAmount(from, cost); // Charge the user. Are you enjoying this, right ?
+            delete parkingCars[from]; // Delete user(car) from list
+            io.sockets.emit('parking-cars', parkingCars); // Update every browser client
+        }
     } else
     
     // START message => started parking
