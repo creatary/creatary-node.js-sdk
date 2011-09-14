@@ -5,10 +5,12 @@
   , "homepage": "http://creatary.com"
   , "keywords": ["sms", "mms", "oauth", "location", "charging"]
   , "author": "Balazs Nagy <balazs.1.nagy@nsn.com>"
-  , "contributors": []
+  , "contributors": [
+  		"Attila Incze <attila.incze@nsn.com>"
+  	]
   , "repository":{
         "type": "git"
-      , "url": ""
+      , "url": "git://github.com/tamdeveloper/creatary-node.js.git"
     }
   , "dependencies": {
         "oauth": "0.9.5",
