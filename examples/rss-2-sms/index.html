@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://raw.github.com/carhartl/jquery-cookie/master/jquery.cookie.js"></script>
+        <script type="text/javascript" src="https://raw.github.com/tamdeveloper/creatary-js/master/lib/creatary.js"></script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var cookie = $.cookie('rss2sms');
+                if (cookie === null) {
+                    cookie = (new Date()).getTime() * Math.random();
+                    $.cookie('rss2sms', cookie, { expires: 365 });
+                }
+                
+                var socket = io.connect('/');
+                socket.on('rss-list-resp', function(data) {
+                    $('#rss-list').empty();
+                    for (var rss in data) {
+                        $('<li/>').append(rss).append(
+                            $('<a/>', {
+                                href: '#',
+                                text: '(delete)',
+                                click: function() {
+                                    socket.emit('rss-del', { rss: $(this).attr('rss'), cookie: cookie });
+                                }
+                            }).attr('rss', rss)
+                        ).appendTo('#rss-list');
+                    }
+                });
+                socket.emit('rss-list-req', { cookie: cookie });
+                
+                $('#rss-add').click(function() {
+                    socket.emit('rss-add', { rss: $('#rss-input').val(), cookie: cookie });
+                    $('#rss-input').val('');
+                    $('#confirmation').show().delay(1000).fadeOut();
+                });
+                
+                Creatary.init('consumer_key', function(oauth_params) {
+                    socket.emit('auth-done', { oauth_params: oauth_params, cookie: cookie });
+                });
+            });
+        </script>
+        <style type="text/css">
+            body {
+                background: #eee;
+                font-family: Verdana;
+                color: #888;
+                text-shadow: #fff 1px 1px;
+            }
+            body > div {
+                width: 800px;
+                margin: auto;
+                text-align: center;
+            }
+            body > div > span {
+                width: 400px;
+                float: left;
+                text-align: left;
+            }
+            h3 > span {
+                font-size: 150%;
+                position: relative;
+                top: 3px;
+                color: #555;
+            }
+            #rss-input {
+                width: 300px;
+            }
+            a {
+                margin-left: 10px;
+                font-size: 70%;
+                color: #aaa;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Rss 2 Sms</h1>
+            <p>Receive SMS notifications every time your favorites change.</p>
+            <span>
+                <h3><span>1.</span> Authorize us to send You SMS</h3>
+                <div id="creatary-root"></div>
+            </span>
+            <span>
+                <h3><span>2.</span> Add RSS feeds</h3>
+                <ul id="rss-list">
+                </ul>
+                <input type="text" id="rss-input" />
+                <input type="button" value="Add" id="rss-add" />
+                <p id="confirmation" style="display: none; font-weight: bold;">Entry stored, enjoy!</p>
+            </span>
+        </div>
+    </body>
+</html>
