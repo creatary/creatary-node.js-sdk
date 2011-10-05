@@ -2,7 +2,8 @@
     <head>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
         <script type="text/javascript" src="https://raw.github.com/carhartl/jquery-cookie/master/jquery.cookie.js"></script>
-        <script type="text/javascript" src="https://raw.github.com/tamdeveloper/creatary-js/master/lib/creatary.js"></script>
+        <!--script type="text/javascript" src="https://raw.github.com/tamdeveloper/creatary-js/master/lib/creatary.js"></script-->
+        <script type="text/javascript" src="/creatary.js"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
@@ -35,8 +36,25 @@
                     $('#confirmation').show().delay(1000).fadeOut();
                 });
                 
-                Creatary.init('consumer_key', function(oauth_params) {
-                    socket.emit('auth-done', { oauth_params: oauth_params, cookie: cookie });
+                socket.emit('need-access-token', { cookie: cookie });
+                socket.on('need-access-token', function(need) {
+                    if (!need) {
+                        $('#thanks').show();
+                        return;
+                    }
+                    $('#creatary-root').show();
+                    Creatary.init('zfx9xo6mn224sq7s', {
+                        // Authorized callback
+                        callback: function(code) {
+                            $('#creatary-root').hide();
+                            $('#thanks').show();
+                            socket.emit('auth-done', { code: code, cookie: cookie });
+                        },
+                         // Rejected callback
+                        error_callback: function() {
+                        },
+                        loglevel: Creatary.log.DEBUG
+                    });
                 });
             });
         </script>
@@ -48,12 +66,12 @@
                 text-shadow: #fff 1px 1px;
             }
             body > div {
-                width: 800px;
+                width: 1000px;
                 margin: auto;
                 text-align: center;
             }
             body > div > span {
-                width: 400px;
+                width: 550px;
                 float: left;
                 text-align: left;
             }
@@ -72,6 +90,19 @@
                 color: #aaa;
                 text-decoration: none;
             }
+            #creatary-root {
+                width: 500px;
+                height: 220px;
+                border: 1px #888 solid;
+                border-radius: 10px;
+                padding: 10px;
+                background-color: #fff;
+            }
+            #thanks {
+                font-size: 200%;
+                color: #f55;
+                margin-left: 150px;
+            }
         </style>
     </head>
     <body>
@@ -80,9 +111,10 @@
             <p>Receive SMS notifications every time your favorites change.</p>
             <span>
                 <h3><span>1.</span> Authorize us to send You SMS</h3>
-                <div id="creatary-root"></div>
+                <div id="creatary-root" style="display: none"></div>
+                <div id="thanks" style="display: none">Thanks!</div>
             </span>
-            <span>
+            <span style="width: 450px;">
                 <h3><span>2.</span> Add RSS feeds</h3>
                 <ul id="rss-list">
                 </ul>

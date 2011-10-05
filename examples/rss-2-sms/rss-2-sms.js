@@ -34,18 +34,28 @@ var srv = express.createServer(
     express.session({secret:"session_secret"})
 );
 var io = require('socket.io').listen(srv);
+var url = require('url'), http = require('http');
 
 // Creatary configuration object
 var creataryConfig = {
-    server: srv
+    server: srv,
+    oAuth2: {
+        redirectUri: "http://localhost"
+    }
 };
 // Init Creatary module with the application consumer key and secret
-var creatary = require('../../lib/creatary').init('consumer_key', 'consumer_secret', creataryConfig);
+var creatary = require('../../lib/creatary').init('zfx9xo6mn224sq7s', 'el222cxvqft95ho7', creataryConfig);
 
 // Mount index page
 srv.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
 });
+
+// Mount index page
+srv.get('/creatary.js', function (req, res) {
+    res.sendfile(__dirname + '/creatary.js');
+});
+
 
 // Let our webserver listen on the specified port
 srv.listen(80);
@@ -56,41 +66,54 @@ var memStore = {};
 // Handle browser connections
 io.sockets.on('connection', function (socket) {
     socket.on('rss-list-req', function(data) {
-        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { oauth_token: null, rss: {} });
+        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { access_token: null, rss: {} });
         socket.emit('rss-list-resp', rec.rss);
     });
     
     socket.on('rss-add', function(data) {
-        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { oauth_token: null, rss: {} });
-        rec.rss[data.rss] = {};
-        socket.emit('rss-list-resp', rec.rss);
+        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { access_token: null, rss: {} });
+        getPage(data.rss, function(content) {
+            rec.rss[data.rss] = content;
+            socket.emit('rss-list-resp', rec.rss);
+        });
     });
     
     socket.on('rss-del', function(data) {
-        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { oauth_token: null, rss: {} });
+        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { access_token: null, rss: {} });
         delete rec.rss[data.rss];
         socket.emit('rss-list-resp', rec.rss);
     });
     
+    socket.on('need-access-token', function(data) {
+        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { access_token: null, rss: {} });
+        socket.emit('need-access-token', (rec.access_token === null));
+    });
+    
     socket.on('auth-done', function(data) {
-        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { oauth_token: null, rss: {} });
-        creatary.Oauth.getAccessToken(data.oauth_params, function(oauth) {
-            rec.oauth_token = oath.access_token;
+        var rec = memStore[data.cookie] ? memStore[data.cookie] : (memStore[data.cookie] = { access_token: null, rss: {} });
+        creatary.OAuth.getAccessToken(data.code, function(oauth) {
+            rec.access_token = oauth.access_token;
         });
     });
 });
 
-var getPage = function(urll) {    
+var pageCache = {};
+
+var getPage = function(urll, cb) {
     var siteUrl = url.parse(urll);
     var site = http.createClient(siteUrl.port || 80, siteUrl.host);
+    site.on('error', function(){});
 
-    var request = site.request("GET", siteUrl.pathname, {'Host' : siteUrl.host})
-    request.end();
-
+    var request = site.request("GET", siteUrl.pathname, {'Host' : siteUrl.host});
+    request.on('error', function(){});
+    
+    var data = '';
     request.on('response', function(response) {
         response.on('data', function(chunk) {
+            data += chunk;
         });
       response.on('end', function() {
+          cb(data);
       });
     });
 
@@ -98,7 +121,22 @@ var getPage = function(urll) {
 }
 
 var pollFeeds = function() {
-    //setTimeout(pollFeeds, 1000);
+    for (var user in memStore) {
+        var rec = memStore[user];
+        for (var rss in rec.rss) {
+            getPage(rss, function() {  // put it in a closure
+                var _rss = rss;
+                var _rec = rec;
+                return function(content) {
+                    if (content !== rec.rss[_rss]) {
+                        _rec.rss[_rss] = content;
+                        creatary.Sms.send(_rec.access_token, 'RSS feed updated: ' + _rss);
+                    }
+                };
+            }());
+        }
+    }
+    setTimeout(pollFeeds, 60000); // Check feeds every minute
 }
 
 pollFeeds();
