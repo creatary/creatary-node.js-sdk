@@ -44,7 +44,7 @@ var creataryConfig = {
     }
 };
 // Init Creatary module with the application consumer key and secret
-var creatary = require('../../lib/creatary').init('zfx9xo6mn224sq7s', 'el222cxvqft95ho7', creataryConfig);
+var creatary = require('../../lib/creatary').init('consumer_key', 'consumer_secret', creataryConfig);
 
 // Mount index page
 srv.get('/', function (req, res) {
