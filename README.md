@@ -15,7 +15,7 @@ https://creatary.com
 
 ### Initialization
 
-Init Creatary module with your application consumer key and secret: (that you obtain from https://creatary.com)
+Init Creatary module with your application consumer key and secret (also called client_id and client_secret: (that you obtain from https://creatary.com)
 
 ```js
 var creatary = require('creatary').init(consumer_key, consumer_secret, [optional_parameters]);
@@ -23,15 +23,18 @@ var creatary = require('creatary').init(consumer_key, consumer_secret, [optional
 
 ```js
 optional_parameters = {
-    server: srv, // pass your Express instance, Creatary module will reuse it for OAuth and listening for SMS
-    receiveSms : { // parameters for receiving SMS
-        url: 'http://localhost:10001/sms', // SMS callback url
-        callBack: onSms // callback function for incoming SMS
+    server: srv, // (optional) Pass your Express instance, Creatary module will reuse it for OAuth and listening for SMS
+    receiveSms : { // (optional) Parameters for receiving SMS
+        url: 'http://localhost/sms', // (mandatory) SMS callback url
+        callBack: onSms // (mandatory) Callback function for incoming SMS
     },
-    oAuth : {
-        connectUrl : '/connect', // relative URL, used to initiate the OAuth authorization for your app
-        url: 'http://173.203.109.105:10001/callback', // absolute URL, used redirect back the user after authorization
-        callback: onAuthed // callback function after successful oAuth flow
+    oAuth : { // (optional if you use OAuth 1.0 mode) Do NOT supply otherwise
+        connectUrl : '/connect', // (mandatory) Relative URL, used to initiate the OAuth authorization for your app
+        url: 'http://localhost/callback', // (mandatory) Absolute URL, used redirect back the user after authorization
+        callback: onAuthed // (mandatory) Callback function after successful oAuth flow
+    },
+    oAuth2 : { // (mandatory if you use OAuth 2.0 mode) Do NOT supply otherwise
+        redirectUri : 'http://localhost' // (mandatory) Exactly the same redirect_uri you have provided on Creatary website
     }
 }
 ```
