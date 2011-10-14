@@ -33,9 +33,7 @@ optional_parameters = {
         url: 'http://localhost/callback', // (mandatory) Absolute URL, used redirect back the user after authorization
         callback: onAuthed // (mandatory) Callback function after successful oAuth flow
     },
-    oAuth2 : { // (mandatory if you use OAuth 2.0 mode) Do NOT supply otherwise
-        redirectUri : 'http://localhost' // (mandatory) Exactly the same redirect_uri you have provided on Creatary website
-    }
+    oAuth2 : true // (mandatory if you use OAuth 2.0 mode) Do NOT supply otherwise
 }
 ```
 And you're ready to use self-describing API calls:
