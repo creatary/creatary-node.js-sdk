@@ -80,8 +80,8 @@ io.sockets.on('connection', function (socket) {
 srv.listen(80);
 
 // After oAuth authorization, store user in session and redirect to root
-function onAuthed(req, res, oath) {
-    req.session.user = oath.access_token;
+function onAuthed(req, res, oauth) {
+    req.session.user = oauth.access_token;
     res.redirect("/");
 }
 
@@ -110,12 +110,13 @@ function onSms(params) {
     
     // START message => started parking
     if (message.indexOf('START') != -1) {
-        parkingCars[from] = {}; // Add user(car) to list
-        parkingCars[from].plate = message.replace('START', '');
-        parkingCars[from].fromTime = new Date();
-        parkingCars[from].fromPrettyTime = prettyTime(parkingCars[from].fromTime);
+        var record = {};
+        record.plate = message.replace('START', '');
+        record.fromTime = new Date();
+        record.fromPrettyTime = prettyTime(record.fromTime);
         creatary.Location.getCoordinates(from, function(data) {
-            parkingCars[from].coords = data;
+            record.coords = data; // Add user(car) to list
+            parkingCars[from] = record;
             creatary.Sms.send(from, "Thanks for using Mobile Parking! Please text 'END' as soon as you finished parking.");
             io.sockets.emit('parking-cars', parkingCars); // Update every browser client
         });
