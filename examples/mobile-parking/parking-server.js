@@ -91,8 +91,8 @@ function onSms(params) {
     var message = params.body;
     var from = params.access_token;
     
-    // STOP message => finished parking
-    if (message.indexOf('STOP') != -1) {
+    // END message => finished parking
+    if (message.indexOf('END') != -1) {
         var record = parkingCars[from];
         if (typeof record !== "undefined") {
             var toTime = new Date();
@@ -116,13 +116,13 @@ function onSms(params) {
         parkingCars[from].fromPrettyTime = prettyTime(parkingCars[from].fromTime);
         creatary.Location.getCoordinates(from, function(data) {
             parkingCars[from].coords = data;
-            creatary.Sms.send(from, "Thanks for using Mobile Parking! Please text 'STOP' as soon as you finished parking.");
+            creatary.Sms.send(from, "Thanks for using Mobile Parking! Please text 'END' as soon as you finished parking.");
             io.sockets.emit('parking-cars', parkingCars); // Update every browser client
         });
     } else
     // Unknown message
     {
-        creatary.Sms.send(from, "Incorrect message. Please send 'START ABC123' (your license plate) to start, and 'STOP' to stop parking.");
+        creatary.Sms.send(from, "Incorrect message. Please send 'START ABC123' (your license plate) to start, and 'END' to stop parking.");
     }
 }
 
