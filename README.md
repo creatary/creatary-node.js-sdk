@@ -1,4 +1,4 @@
-# node-creatary
+# creatary-node.js-sdk
 
 A node.js module for accessing Creatary API.
 
@@ -9,7 +9,7 @@ https://creatary.com
 
 ## How to Install
 
-    npm install creatary
+    npm install creatary-sdk
 
 ## How to Use
 
@@ -18,7 +18,7 @@ https://creatary.com
 Init Creatary module with your application consumer key and secret (also called client_id and client_secret: (that you obtain from https://creatary.com)
 
 ```js
-var creatary = require('creatary').init(consumer_key, consumer_secret, [optional_parameters]);
+var creatary = require('creatary-sdk').init(consumer_key, consumer_secret, [optional_parameters]);
 ```
 
 ```js

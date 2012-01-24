@@ -1,5 +1,5 @@
 {
-    "name": "creatary"
+    "name": "creatary-sdk"
   , "version": "0.0.1"
   , "description": "Official node.js implementation of Creatary API"
   , "homepage": "http://creatary.com"
@@ -10,7 +10,7 @@
   	]
   , "repository":{
         "type": "git"
-      , "url": "git://github.com/tamdeveloper/creatary-node.js.git"
+      , "url": "git://github.com/creatary/creatary-node.js-sdk.git"
     }
   , "dependencies": {
         "oauth": "0.9.5",
