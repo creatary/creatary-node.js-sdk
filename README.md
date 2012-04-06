@@ -72,14 +72,9 @@ locData = {
 }
 ```
 
-### Charging
+## Documentation
 
-```js
-// Charge User for 1.00 USD
-creatary.Charging.chargeAmount(userToken, 100);
-// Charge User with a service code
-creatary.Charging.chargeCode(userToken, "MO");
-```
+More details in the documentation https://github.com/creatary/creatary-node.js-sdk/wiki
 
 ## License
 
