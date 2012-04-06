@@ -16,7 +16,10 @@
         "oauth": "0.9.6",
         "express": "2.5.8"
     }
-  , "devDependencies": {}
+  , "devDependencies": {
+  		"mocha": "*",
+  		"sinon": "*"
+  }
   , "main": "./lib/creatary"
   , "engines": { "node": ">= 0.6.10" }
 }
