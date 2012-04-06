@@ -15,6 +15,7 @@ describe('Sms', function() {
 	afterEach(function() {
 		sandbox.restore();
 	});
+
 	describe(".send", function() {
 		it('should post sms', function() {
 			// given
@@ -60,7 +61,7 @@ describe('Sms', function() {
 			assert(stub.calledWith("http://localhost:8181/listen"));
 		})
 		
-		it("should call callback", function(done) {
+		it("should call callback", function() {
 			// given
 			var api_response = {
 				"to" : "to",
@@ -74,11 +75,13 @@ describe('Sms', function() {
 			});
 			var callback = function(data) {
 				assert.deepEqual(data, api_response);
-				done();
 			};
 			
 			// when
 			sms.receive(callback);
+			
+			// then
+			assert.equal(shared.oAuth1SecretTable["access_token"], "token_secret"); 
 		})
 		
 		it("should log if response not valid", function() {
