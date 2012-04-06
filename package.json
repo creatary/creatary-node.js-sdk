@@ -1,6 +1,6 @@
 {
     "name": "creatary-sdk"
-  , "version": "0.0.1"
+  , "version": "0.1.0"
   , "description": "Official node.js implementation of Creatary API"
   , "homepage": "http://creatary.com"
   , "keywords": ["sms", "mms", "oauth", "location", "charging"]
@@ -13,11 +13,12 @@
       , "url": "git://github.com/creatary/creatary-node.js-sdk.git"
     }
   , "dependencies": {
-        "oauth": "0.9.5",
-        "express": "2.4.6"
+        "oauth": "0.9.6",
+        "express": "2.5.8"
     }
   , "devDependencies": {}
   , "main": "./lib/creatary"
-  , "engines": { "node": ">= 0.4.10" }
+  , "engines": {
+    "node":">= 0.4.1 < 0.7.0"
+  }
 }
-
