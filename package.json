@@ -8,7 +8,7 @@
   , "contributors": [
   		"Attila Incze <attila.incze@nsn.com>"
   	]
-  , "repository":{
+  , "repository": {
         "type": "git"
       , "url": "git://github.com/creatary/creatary-node.js-sdk.git"
     }
@@ -21,6 +21,7 @@
   		"sinon": "*"
   }
   , "main": "./lib/creatary"
-  , "engines": { "node": ">= 0.6.10" }
+  , "engines": {
+    "node":">= 0.6.0 < 0.7.0"
+  }
 }
-
