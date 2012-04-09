@@ -2,19 +2,25 @@ var sinon = require("sinon"),
 	assert = require("assert"), 
 	test_load = require("../loader").load;
 
-// it's not the final url which is used in real environment
-var SMS_SEND_URL = "https://telcoassetmarketplace.com/api/sms/send";
-
-var sms = test_load("sms.js");
-var shared = test_load("shared.js");
 
 describe('Sms', function() {
-
-	var sandbox = sinon.sandbox.create();
-
+	// it's not the final url which is used in real environment
+	var SMS_SEND_URL = "https://telcoassetmarketplace.com/api/1/sms/send";
+	
+	var shared;
+	var sms;
+	var sandbox;
+	
+	before(function() {
+		shared = test_load("shared");
+		shared.apiURL = "https://telcoassetmarketplace.com/api/1/";
+		sms = test_load("sms").init();
+		sandbox = sinon.sandbox.create();
+	})
+	
 	afterEach(function() {
 		sandbox.restore();
-	});
+	})
 
 	describe(".send", function() {
 		it('should post sms', function() {

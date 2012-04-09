@@ -18,7 +18,8 @@
     }
   , "devDependencies": {
   		"mocha": "*",
-  		"sinon": "*"
+  		"sinon": "*",
+  		"nock": "*"
   }
   , "main": "./lib/creatary"
   , "engines": {

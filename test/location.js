@@ -30,7 +30,7 @@ describe('Location', function() {
 			stub.calledWith("toToken", LOCATION_URL, callback_spy);
 		})
 		
-		it("should call callback", function(done) {
+		it("should call callback", function() {
 			// given
 			var current_location = {
 			    "latitude":52.52349,
@@ -50,11 +50,13 @@ describe('Location', function() {
 			});
 			var callback_spy = sinon.spy(function(resp) {
 				assert.deepEqual(resp, current_location);
-				done();
 			});
 			
 			// when
 			location.getCoordinates("toToken", callback_spy);
+			
+			// then
+			assert(callback_spy.calledOnce);
 		})
 		
 		it("should log if response not valid", function() {
