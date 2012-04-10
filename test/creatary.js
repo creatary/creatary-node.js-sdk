@@ -8,6 +8,7 @@ var HOST = "https://telcoassetmarketplace.com";
 var URL_SMS_SEND = "/api/1/sms/send";
 var URL_OAUTH2_SMS_SEND = "/api/2/sms/send";
 var URL_OAUTH2_ACCESS = "/api/2/oauth/token";
+var URL_LOCATION = "/api/1/location/getcoord";
 
 var creatary = test_load("creatary.js");
 var shared = test_load("shared.js");
@@ -99,6 +100,41 @@ describe('Creatary', function() {
 			});
 			request.write(JSON.stringify(incoming_sms));
 			request.end();
+		})
+	})
+	
+	describe("Location", function() {
+		it("should request location", function(done) {
+			// given
+			creatary.init(consumerKey, consumerSecret, {
+				
+			});
+			creatary.OAuth.setSecretToken("toToken", "toSecret");
+			
+			var current_location = {
+			    "latitude":52.52349,
+			    "longitude":13.34294,
+			    "accuracy":200, 
+			    "timestamp":1288747339000
+			};
+			
+			var callback = function(params) {
+				assert.deepEqual(params, current_location);
+				done();
+			}
+			
+			var mock = nock(HOST)
+			   .get(URL_LOCATION, "")
+			   .reply(200, {
+  					"status": {
+    					"code":"0",
+    					"message":"Request was handled succesfully" 
+  					},
+					"body": current_location
+				});
+				
+			// when
+			creatary.Location.getCoordinates("toToken", callback);
 		})
 	})
 	
