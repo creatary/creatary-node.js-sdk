@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/creatary/creatary-node.js-sdk.png)](http://travis-ci.org/creatary/creatary-node.js-sdk)
 # creatary-node.js-sdk
 
 A node.js module for accessing Creatary API.
